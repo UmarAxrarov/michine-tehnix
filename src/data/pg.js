@@ -1,6 +1,8 @@
 // JS FR
+const { config } = require("dotenv");
 const { Pool } = require("pg");
 // JS
+config();
 const pool = new Pool({
     host: process.env.DB_HOST,
     port: +process.env.DB_PORT,
@@ -9,7 +11,7 @@ const pool = new Pool({
     database: process.env.DB_DATABASE,
 });
 
-async function query(queryString,params) {
+async function query(queryString,params = []) {
     const client = await pool.connect();
     try {
         const { rows } = client.query(queryString,params.length ? params : null);
@@ -20,6 +22,4 @@ async function query(queryString,params) {
         client.release();
     }
 }
-query("select * from products", []),
-query("insert into products(name) values (1$)")
 module.exports = query;
